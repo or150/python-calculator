@@ -26,7 +26,7 @@ class PolishNotationSyntaxParser(SyntaxParserBase):
             lhs = self._parse(tokens)
             rhs = self._parse(tokens)
             return BinaryOperatorSyntaxNode(operator=token.value, lhs=lhs, rhs=rhs)
-        elif token.kind == TokenType.Symbol and token.value == '!':
+        elif token.kind == TokenType.Symbol and token.value in ('!', '~'):
             operand = self._parse(tokens)
             return UnaryOperatorSyntaxNode(operator=token.value, operand=operand)
         elif token.kind == TokenType.Identifier:

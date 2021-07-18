@@ -12,7 +12,7 @@ class Tokenizer(TokenizerBase):
             char = input[i]
             if char == ' ':
                 i += 1
-            elif char in ['(', ')', '+', '-', '/', '*', ',', '^', '!']:
+            elif char in ['(', ')', '+', '-', '/', '*', ',', '^', '!', '~']:
                 tokens.append(Token(kind=TokenType.Symbol, value=char))
                 i += 1
             elif char.isdigit():

@@ -4,6 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 from python_calculator.calculator import Calculator
 from python_calculator.evaluation.arithmetic_expression_evaluator import ArithmeticExpressionEvaluator
+from python_calculator.evaluation.boolean_expression_evaluator import BooleanExpressionEvaluator
 from python_calculator.evaluation.cos_handler import CosHandler
 from python_calculator.evaluation.pi_handler import PiHandler
 from python_calculator.evaluation.root_handler import RootHandler
@@ -29,12 +30,14 @@ def main():
         SqrtHandler(),
         RootHandler()
     ]
+    infix_parser = InfixSyntaxParser()
+    polish_parser = PolishNotationSyntaxParser(function_handlers)
+    arithmetic_evaluator = ArithmeticExpressionEvaluator(function_handlers)
+    boolean_evaluator = BooleanExpressionEvaluator()
     calculator = Calculator(
         tokenizer=Tokenizer(),
-        syntax_parser=PolishNotationSyntaxParser(function_handlers),
-        expression_evaluator=ArithmeticExpressionEvaluator(
-            function_handlers=function_handlers
-        )
+        syntax_parser=infix_parser,
+        expression_evaluator=arithmetic_evaluator
     )
     input_reader_factory = InputReaderFactory()
     input_reader = input_reader_factory.create_reader(args.file)
