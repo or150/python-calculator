@@ -14,6 +14,7 @@ from python_calculator.input import InputReaderFactory
 from python_calculator.measurement.execution_time_counter import ExecutionTimeCounter
 from python_calculator.measurement.progress_counter import ProgressCounter
 from python_calculator.syntax.infix_syntax_parser import InfixSyntaxParser
+from python_calculator.syntax.polish_notation_syntax_parser import PolishNotationSyntaxParser
 from python_calculator.tokens.tokenizer import Tokenizer
 
 
@@ -21,17 +22,18 @@ def main():
     parser = _create_arg_parser()
     args = parser.parse_args()
 
+    function_handlers = [
+        SinHandler(),
+        CosHandler(),
+        PiHandler(),
+        SqrtHandler(),
+        RootHandler()
+    ]
     calculator = Calculator(
         tokenizer=Tokenizer(),
-        syntax_parser=InfixSyntaxParser(),
+        syntax_parser=PolishNotationSyntaxParser(function_handlers),
         expression_evaluator=ArithmeticExpressionEvaluator(
-            function_handlers=[
-                SinHandler(),
-                CosHandler(),
-                PiHandler(),
-                SqrtHandler(),
-                RootHandler()
-            ]
+            function_handlers=function_handlers
         )
     )
     input_reader_factory = InputReaderFactory()
