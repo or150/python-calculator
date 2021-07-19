@@ -19,9 +19,10 @@ def main():
     )
     input_reader_factory = InputReaderFactory()
     input_reader = input_reader_factory.create_reader(args.file)
-    expression = input_reader.read_input()
-    result = calculator.calculate(expression)
-    print(result)
+    expressions = input_reader.read_input()
+    for expression in expressions:
+        result = calculator.calculate(expression)
+        print(result)
     print(f'Call count: {calculator.calculate.call_count}')
 
 
