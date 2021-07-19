@@ -22,6 +22,7 @@ def main():
     expression = input_reader.read_input()
     result = calculator.calculate(expression)
     print(result)
+    print(f'Call count: {calculator.calculate.call_count}')
 
 
 if __name__ == '__main__':
