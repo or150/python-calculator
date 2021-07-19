@@ -2,7 +2,7 @@ from typing import List, Sequence
 
 from python_calculator.abstract.syntax import SyntaxParserBase
 from python_calculator.abstract.syntax.nodes import SyntaxNode, BinaryOperatorSyntaxNode, UnaryOperatorSyntaxNode, \
-    LiteralSyntaxNode
+    LiteralSyntaxNode, FunctionSyntaxNode
 from python_calculator.abstract.tokens import Token, TokenType
 
 
@@ -13,7 +13,9 @@ class InfixSyntaxParser(SyntaxParserBase):
     Term -> Factor | Factor {* Factor} | Factor {/ Factor}
     Factor -> Base | Base ^ Factor
     Base -> Literal | -Literal
-    Literal -> number | (Expr)
+    Literal -> number | (Expr) | Func
+    Func -> func(Args) | func(), func
+    Args -> Expr | Expr,Args
     """
 
     def parse(self, tokens: List[Token]) -> SyntaxNode:
@@ -87,5 +89,33 @@ class InfixSyntaxParser(SyntaxParserBase):
                 return expr
             else:
                 raise Exception(f'Unexpected token: {token}')
+        return self._parse_func(tokens)
 
-        raise Exception(f'Unexpected token: {tokens[0]}')
+    def _parse_func(self, tokens: List[Token]) -> SyntaxNode:
+        function_name = tokens.pop(0)
+        if function_name.kind != TokenType.Identifier:
+            raise Exception(f'Unexpected token: {function_name}')
+        if not tokens or tokens[0].kind != TokenType.Symbol or tokens[0].value != '(':
+            return FunctionSyntaxNode(function=function_name.value, args=[])
+
+        tokens.pop(0)
+        if tokens[0].kind == TokenType.Symbol and tokens[0].value == ')':
+            args = []
+        else:
+            args = self._parse_args(tokens)
+        parenthesis = tokens.pop(0)
+        if parenthesis.kind != TokenType.Symbol or parenthesis.value != ')':
+            raise Exception(f'Unexpected token: {parenthesis}')
+        return FunctionSyntaxNode(function=function_name.value, args=args)
+
+    def _parse_args(self, tokens: List[Token]) -> Sequence[SyntaxNode]:
+        args = []
+        while True:
+            arg = self._parse_expr(tokens)
+            args.append(arg)
+            if not tokens:
+                break
+            if tokens[0].kind != TokenType.Symbol or tokens[0].value != ',':
+                break
+            tokens.pop(0)
+        return args

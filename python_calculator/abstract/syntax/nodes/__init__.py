@@ -2,3 +2,4 @@ from .syntax_node import SyntaxNode
 from .literal_syntax_node import LiteralSyntaxNode
 from .binary_operator_syntax_node import BinaryOperatorSyntaxNode
 from .unary_operator_syntax_node import UnaryOperatorSyntaxNode
+from .function_syntax_node import FunctionSyntaxNode

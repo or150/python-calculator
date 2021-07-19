@@ -2,8 +2,8 @@ import typing
 from abc import ABC, abstractmethod
 
 if typing.TYPE_CHECKING:
-    from python_calculator.abstract.syntax.nodes import LiteralSyntaxNode, BinaryOperatorSyntaxNode, \
-        UnaryOperatorSyntaxNode
+    from python_calculator.abstract.syntax.nodes import LiteralSyntaxNode, BinaryOperatorSyntaxNode, UnaryOperatorSyntaxNode, \
+        FunctionSyntaxNode
 
 
 class SyntaxNodeVisitor(ABC):
@@ -17,4 +17,8 @@ class SyntaxNodeVisitor(ABC):
 
     @abstractmethod
     def visit_literal(self, node: 'LiteralSyntaxNode'):
+        pass
+
+    @abstractmethod
+    def visit_function(self, node: 'FunctionSyntaxNode'):
         pass

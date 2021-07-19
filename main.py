@@ -4,6 +4,11 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 from python_calculator.calculator import Calculator
 from python_calculator.evaluation.arithmetic_expression_evaluator import ArithmeticExpressionEvaluator
+from python_calculator.evaluation.cos_handler import CosHandler
+from python_calculator.evaluation.pi_handler import PiHandler
+from python_calculator.evaluation.root_handler import RootHandler
+from python_calculator.evaluation.sin_handler import SinHandler
+from python_calculator.evaluation.sqrt_handler import SqrtHandler
 from python_calculator.execution import SyncCalculatorRunner, ParallelCalculatorRunner
 from python_calculator.input import InputReaderFactory
 from python_calculator.measurement.execution_time_counter import ExecutionTimeCounter
@@ -19,7 +24,15 @@ def main():
     calculator = Calculator(
         tokenizer=Tokenizer(),
         syntax_parser=InfixSyntaxParser(),
-        expression_evaluator=ArithmeticExpressionEvaluator()
+        expression_evaluator=ArithmeticExpressionEvaluator(
+            function_handlers=[
+                SinHandler(),
+                CosHandler(),
+                PiHandler(),
+                SqrtHandler(),
+                RootHandler()
+            ]
+        )
     )
     input_reader_factory = InputReaderFactory()
     input_reader = input_reader_factory.create_reader(args.file)
