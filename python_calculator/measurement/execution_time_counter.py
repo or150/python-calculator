@@ -26,9 +26,5 @@ class ExecutionTimeCounter:
             self._measurements.append(measurement.execution_time)
 
     @property
-    def average_execution_time(self):
-        return sum(self._measurements) / len(self._measurements)
-
-    @property
     def total_execution_time(self):
         return sum(self._measurements)

@@ -1,15 +1,13 @@
 from threading import Thread, Lock, Event
 
-from python_calculator.calculator import Calculator
-
 
 class ProgressCounter:
-    def __init__(self, calculator: Calculator):
+    def __init__(self):
         self._thread: Thread = None
-        self._calculator = calculator
         self._lock = Lock()
         self._stop_event = Event()
         self._stop_event.set()
+        self._call_count = 0
 
     def start(self):
         with self._lock:
@@ -24,6 +22,13 @@ class ProgressCounter:
             self._stop_event.set()
             self._thread.join()
 
+    def increment_call_count(self, value: int = 1):
+        self._call_count += value
+
+    @property
+    def call_count(self):
+        return self._call_count
+
     def _progress_counter_loop(self):
         while not self._stop_event.wait(0.1):
-            print(f'Calculated {self._calculator.calculate.call_count} expressions')
+            print(f'Calculated {self._call_count} expressions')
