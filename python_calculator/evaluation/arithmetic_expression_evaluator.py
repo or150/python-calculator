@@ -1,3 +1,4 @@
+import math
 from typing import List, Dict
 
 from python_calculator.abstract.evaluation import ExpressionEvaluatorBase, FunctionHandlerBase
@@ -32,6 +33,8 @@ class ArithmeticSyntaxNodeVisitor(SyntaxNodeVisitor):
         operand = node.operand.accept(self)
         if operator == '-':
             return -operand
+        elif operator == '!':
+            return math.factorial(operand)
         else:
             raise Exception(f'Unknown unary operator: {operator}')
 

@@ -12,7 +12,8 @@ class InfixSyntaxParser(SyntaxParserBase):
     Expr -> Term | Term {+Term} | Term {-Term}
     Term -> Factor | Factor {* Factor} | Factor {/ Factor}
     Factor -> Base | Base ^ Factor
-    Base -> Literal | -Literal
+    Base -> Fact | -Fact
+    Fact -> Literal | Literal!
     Literal -> number | (Expr) | Func
     Func -> func(Args) | func(), func
     Args -> Expr | Expr,Args
@@ -73,9 +74,16 @@ class InfixSyntaxParser(SyntaxParserBase):
     def _parse_base(self, tokens: List[Token]) -> SyntaxNode:
         if tokens[0].kind == TokenType.Symbol and tokens[0].value == '-':
             token = tokens.pop(0)
-            literal = self._parse_literal(tokens)
+            literal = self._parse_fact(tokens)
             return UnaryOperatorSyntaxNode(operator=token.value, operand=literal)
-        return self._parse_literal(tokens)
+        return self._parse_fact(tokens)
+
+    def _parse_fact(self, tokens: List[Token]) -> SyntaxNode:
+        literal = self._parse_literal(tokens)
+        if tokens and tokens[0].kind == TokenType.Symbol and tokens[0].value == '!':
+            token = tokens.pop(0)
+            return UnaryOperatorSyntaxNode(operator=token.value, operand=literal)
+        return literal
 
     def _parse_literal(self, tokens: List[Token]) -> SyntaxNode:
         if tokens[0].kind == TokenType.Number:
